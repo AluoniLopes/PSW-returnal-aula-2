@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpRequest
-from .models import Pessoa, Diario, models
 from datetime import datetime, timedelta
+
+from .models import Pessoa, Diario, models
+from .messages import get_message
 
 def home(request: HttpRequest):
     pessoas_com_contagem = Pessoa.objects.annotate(qtd_diarios= models.Count('diario'))
@@ -32,14 +34,17 @@ def escrever(request: HttpRequest):
         pessoas_obj = Pessoa.objects.filter(id__in=pessoas)
         diario.pessoas.add(*pessoas_obj)
 
-        diario.save()
+        # diario.save()
+        request.session['criado'] = True
         return redirect('escrever')
     
     context = dict(
         pessoas = Pessoa.objects.all(),
     )
+    if 'criado' in request.session and request.session['criado'] == True:
+        context['mensagem_sucesso'] = get_message()
+        del request.session['criado']
 
-    #TODO adicionar mensagem de sucesso
     return render(request, 'escrever.html', context)
     
 def cadastrar_pessoa(request: HttpRequest):

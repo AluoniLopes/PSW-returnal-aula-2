@@ -24,7 +24,8 @@
             <div class="bg-slate-200/5 ring ring-1 ring-white/20 rounded-md py-8 px-6">
                 <form action="" method="POST"> {% csrf_token %}
                     <h1 class="text-pretty font-semibold tracking-tight text-white sm:text-4xl">Faça aqui seu registro diário</h1>
-                    <br>
+                    <br>{% if mensagem_sucesso %} <p class="text-pretty font-semibold text-white">Sucesso: {{mensagem_sucesso}}</p>
+                    <br>{% endif %}
                     <div>
                         <label class="block text-sm/6 font-medium text-gray-200">Título</label>
                         <div class="mt-2">
